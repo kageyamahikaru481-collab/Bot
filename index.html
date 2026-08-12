@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello 💗</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:pink;font-family:Arial,sans-serif;overflow:hidden}.box{text-align:center;width:100%;padding:20px}h1{font-size:45px;margin-bottom:30px}button{border:0;border-radius:15px;padding:15px 28px;font-size:20px;margin:10px;transition:.25s ease;cursor:pointer}#yes{background:#ff4081;color:#fff}#no{background:#fff;color:#ff4081}#second{display:none}.heart{font-size:55px}</style>
+</head>
+<body>
+<div class="box" id="first"><div class="heart">💗</div><h1>HELLO</h1><button id="yes">YES ❤️</button><button id="no">NO 😭</button></div>
+<div class="box" id="second"><div class="heart">💗</div><h1>hiiiii ahhahaa 😭💗</h1></div>
+<script>
+let count=0;const yes=document.getElementById('yes'),no=document.getElementById('no');
+no.onclick=()=>{count++;yes.style.transform=`scale(${1+count*.45})`;no.style.transform=`scale(${Math.max(.08,1-count*.06)})`;if(count>=15){no.style.opacity='.08';yes.style.transform='scale(8)'}};
+yes.onclick=()=>{document.getElementById('first').style.display='none';document.getElementById('second').style.display='block'};
+</script>
+</body></html>

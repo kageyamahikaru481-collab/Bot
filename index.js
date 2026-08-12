@@ -1,47 +1,54 @@
-const fs = require("fs");
-const path = require("path");
-const login = require("fca-unofficial");
+const readline = require("readline");
 const config = require("./config.json");
 
-const appStatePath = path.join(__dirname, "appstate.json");
-if (!fs.existsSync(appStatePath)) {
-  console.error("Missing appstate.json. Add your own AppState locally; never commit it.");
-  process.exit(1);
-}
-
-let appState;
-try { appState = JSON.parse(fs.readFileSync(appStatePath, "utf8")); }
-catch (e) { console.error("Invalid appstate.json:", e.message); process.exit(1); }
-
+// Local test mode: no Facebook account or AppState required.
 const commands = new Map();
-const commandDir = path.join(__dirname, "commands");
-for (const file of fs.readdirSync(commandDir).filter(f => f.endsWith(".js"))) {
-  const command = require(path.join(commandDir, file));
+const commandDir = require("path").join(__dirname, "commands");
+for (const file of require("fs").readdirSync(commandDir).filter(f => f.endsWith(".js"))) {
+  const command = require(require("path").join(commandDir, file));
   if (!command.name || typeof command.execute !== "function") continue;
   commands.set(command.name.toLowerCase(), command);
   for (const alias of command.aliases || []) commands.set(alias.toLowerCase(), command);
 }
 
-login({ appState }, (err, api) => {
-  if (err) return console.error("Login failed:", err);
-  api.setOptions({ listenEvents: true, selfListen: false, logLevel: "info" });
-  console.log(`Bot online | prefix: ${config.prefix}`);
+const api = {
+  sendMessage(text) {
+    console.log(`\nBOT: ${text}\n`);
+  }
+};
 
-  api.listenMqtt(async (listenErr, event) => {
-    if (listenErr || !event || event.type !== "message" || !event.body) return;
-    const body = event.body.trim();
-    if (!body.startsWith(config.prefix)) return;
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+console.log(`🤖 ${config.botName} - LOCAL TEST MODE`);
+console.log(`Prefix: ${config.prefix}`);
+console.log("No Facebook account/AppState needed.");
+console.log("Try: .help, .ping, .uid, .say hello, .time\n");
 
-    const parts = body.slice(config.prefix.length).trim().split(/\s+/);
-    const name = (parts.shift() || "").toLowerCase();
-    const command = commands.get(name);
-    if (!command) return api.sendMessage(`Unknown command. Use ${config.prefix}help`, event.threadID);
+rl.setPrompt("> ");
+rl.prompt();
+rl.on("line", async line => {
+  const body = line.trim();
+  if (!body.startsWith(config.prefix)) return rl.prompt();
 
-    try {
-      await command.execute({ body, threadID: event.threadID, senderID: event.senderID, messageID: event.messageID, args: parts }, { api, event, args: parts, config });
-    } catch (e) {
-      console.error(`Command ${name} failed:`, e);
-      api.sendMessage("Command error.", event.threadID);
-    }
-  });
+  const parts = body.slice(config.prefix.length).trim().split(/\s+/);
+  const name = (parts.shift() || "").toLowerCase();
+  const command = commands.get(name);
+  if (!command) {
+    console.log(`\nBOT: Unknown command. Use ${config.prefix}help\n`);
+    return rl.prompt();
+  }
+
+  const message = {
+    body,
+    threadID: "LOCAL_TEST_THREAD",
+    senderID: "LOCAL_TEST_USER",
+    messageID: "LOCAL_TEST_MESSAGE",
+    args: parts
+  };
+
+  try {
+    await command.execute(message, { api, event: message, args: parts, config });
+  } catch (err) {
+    console.error("Command error:", err);
+  }
+  rl.prompt();
 });

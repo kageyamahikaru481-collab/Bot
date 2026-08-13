@@ -1,20 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Aber</title>
-<style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fff;color:#000;font-family:Arial,sans-serif;overflow:hidden}.box{text-align:center;width:100%;padding:20px}h1{font-size:42px;margin-bottom:35px}.btn{border:2px solid #000;background:#fff;color:#000;border-radius:8px;padding:14px 28px;font-size:20px;cursor:pointer;transition:transform .2s ease,left .15s ease,top .15s ease}#sige{position:relative;z-index:2}#yoko{position:fixed;z-index:5;left:calc(50% + 55px);top:calc(50% + 45px)}#second{display:none}
-</style></head>
-<body>
-<div class="box" id="first"><h1>Aber pakopya</h1><button class="btn" id="sige">Sige</button></div>
-<button class="btn" id="yoko">yoko</button>
-<div class="box" id="second"><h1>yonnnnnnn maraming salamat sa iyo aber</h1></div>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Aber</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fff;color:#000;font-family:Arial,sans-serif;overflow:hidden}.box{text-align:center;width:100%;padding:20px}h1{font-size:42px;margin-bottom:35px}.btn{border:2px solid #000;background:#fff;color:#000;border-radius:8px;padding:14px 28px;font-size:20px;cursor:pointer;transition:transform .2s ease,left .15s ease,top .15s ease}#sige{position:relative;z-index:2}#yoko{position:fixed;z-index:5;left:calc(50% + 55px);top:calc(50% + 45px)}#second{display:none}</style></head><body>
+<div class="box" id="first"><h1>Aber pakopya</h1><button class="btn" id="sige">Sige</button></div><button class="btn" id="yoko">yoko</button><div class="box" id="second"><h1>yonnnnnnn maraming salamat sa iyo aber</h1></div>
 <script>
-let count=0;
-const sige=document.getElementById('sige'),yoko=document.getElementById('yoko');
-const words=['sige','sige na','aber sige na','ge na','lah ge na','maawa ka','aber sige na','aberrrr sige na','sige naman','ge na aber','sige na please','aber please','sige na oh','last na','aberrrrr sige na'];
-function moveYoko(e){if(e)e.preventDefault();count++;if(count<=15){sige.textContent=words[count-1];}const w=innerWidth,h=innerHeight,p=15,bw=yoko.offsetWidth,bh=yoko.offsetHeight;const x=p+Math.random()*Math.max(1,w-bw-p*2),y=p+Math.random()*Math.max(1,h-bh-p*2);yoko.style.left=x+'px';yoko.style.top=y+'px';yoko.style.transform='scale('+Math.max(.04,1-count*.06)+')';if(count>=15)yoko.style.opacity='.12'}
-yoko.addEventListener('pointerdown',moveYoko);
-sige.addEventListener('click',()=>{document.getElementById('first').style.display='none';yoko.style.display='none';document.getElementById('second').style.display='block'});
+let count=0;const sige=document.getElementById('sige'),yoko=document.getElementById('yoko');const words=['sige','sige na','aber sige na','ge na','lah ge na','maawa ka','aber sige na','aberrrr sige na','sige naman','ge na aber','sige na please','aber please','sige na oh','last na','aberrrrr sige na'];
+function moveYoko(e){if(e)e.preventDefault();count++;if(count<=15){sige.textContent=words[count-1];sige.style.transform='scale('+(1+count*.45)+')'}const w=innerWidth,h=innerHeight,p=15,bw=yoko.offsetWidth,bh=yoko.offsetHeight;yoko.style.left=(p+Math.random()*Math.max(1,w-bw-p*2))+'px';yoko.style.top=(p+Math.random()*Math.max(1,h-bh-p*2))+'px';yoko.style.transform='scale('+Math.max(.04,1-count*.06)+')';if(count>=15)yoko.style.opacity='.12'}
+yoko.addEventListener('pointerdown',moveYoko);sige.addEventListener('click',()=>{document.getElementById('first').style.display='none';yoko.style.display='none';document.getElementById('second').style.display='block'});
 </script></body></html>
